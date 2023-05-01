@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket-Test</title>
+    <link rel="stylesheet" type="text/css" href="css.css" />
+    <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
+    <script
+      src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+      integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript" charset="utf-8">
+      var socket = io();
+      socket.on("connect", function () {
+        socket.emit("my_event", { data: "connected to the SocketServer..." });
+      });
+
+      function keyclicked(e) {
+        console.log(e.innerText.toLowerCase());
+        socket.emit("keyboard", {
+          data: { key: e.innerText.toLowerCase() },
+        });
+      }
+      function setup() {
+        let cnv = createCanvas(displayWidth, displayHeight);
+        cnv.parent("wordle_canvas");
+        background(0, 0, 0);
+      }
+      let value = 255;
+      let count = 0;
+      function draw() {
+        background(0, 0, 0);
+        fill(255, 255, value);
+        circle(mouseX, mouseY, 200);
+        if (value == 0) {
+          count++;
+          if (count == 20) {
+            value = 255;
+            count == 0;
+          }
+        }
+        if (mouseX - pmouseX != 0 || mouseY - pmouseY != 0) {
+          console.log(mouseX - pmouseX, mouseY - pmouseY);
+          socket.emit("position", {
+            data: { mouseX: mouseX - pmouseX, mouseY: mouseY - pmouseY },
+          });
+        }
+      }
+      function mouseClicked() {
+        console.log("Pressed");
+        if (value === 255) {
+          value = 0;
+        }
+
+        socket.emit("clicked", { data: { mouseX: mouseX, mouseY: mouseY } });
+      }
+    </script>
+  </head>
+  <body style="background-color: white">
+    <h1 style="background-color: white">
+      Mouse and Keyboard Controller using Sockets
+    </h1>
+    <div
+      id="wordle_canvas"
+      style="display: flex; justify-content: center"
+    ></div>
+    <div
+      style="
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        padding-top: 128px;
+      "
+    >
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        Q
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        W
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        E
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        R
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        T
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        Y
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        U
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        I
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        O
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        P
+      </button>
+    </div>
+    <div style="display: flex; flex-direction: row; justify-content: center">
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        A
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        S
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        D
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        F
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        G
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        H
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        J
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        K
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        L
+      </button>
+    </div>
+    <div
+      style="
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        padding-bottom: 32px;
+      "
+    >
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        Z
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        X
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        C
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        V
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        B
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        N
+      </button>
+      <button style="margin: 8px; padding: 8px" onclick="keyclicked(this)">
+        M
+      </button>
+    </div>
+  </body>
+</html>
